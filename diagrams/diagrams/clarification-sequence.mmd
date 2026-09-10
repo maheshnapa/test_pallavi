@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant Call as Caller
+    participant CX as CX / audio bridge
+    participant Fulfill as Fulfillment
+    participant Agent as A2A specialist
+    Call->>CX: Check order ORD-2001
+    CX->>Fulfill: order_id = ORD-2001
+    Fulfill->>Agent: message/send
+    Agent-->>Fulfill: input-required; missing_field = region
+    Fulfill->>Fulfill: Save task ID, context ID, and order data
+    Fulfill-->>CX: Ask east or west
+    CX-->>Call: Spoken clarification
+    Call->>CX: East
+    CX->>Fulfill: region = east in the same CX session
+    Fulfill->>Agent: message/send with saved taskId and contextId
+    Agent-->>Fulfill: working, then completed via polling
+    Fulfill-->>CX: Validated order status
+    CX-->>Call: Spoken result
