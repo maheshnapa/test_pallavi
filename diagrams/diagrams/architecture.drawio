@@ -1,275 +1,251 @@
-<mxfile host="app.diagrams.net" agent="Claude Code" version="24.7.7" type="device">
-  <diagram name="System Architecture" id="sys-arch">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="1240" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-
-        <mxCell id="p1_cli" value="CLI&#160;&#160;&#183;&#160;&#160;python -m ivr_poc &lt;command&gt;&#10;init &#183; demo &#183; chat &#183; serve &#183; doctor&#160;&#160;&#160;&#8594; Python 3.11+ only, no pip, no cloud&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;&#160;&#160;cx-text &#183; voice &#183; microphone &#183; sdk-check&#160;&#160;&#8594; need pip extras / cloud accounts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="20" width="1600" height="46" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_caller" value="Caller&#10;headset mic + speaker&#10;identity = LIVEKIT_CALLER_ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="90" width="270" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_mic" value="microphone client&#10;connectors/microphone.py + sounddevice&#10;command: microphone&#10;&#8226; publishes caller-microphone track (16 kHz)&#10;&#8226; plays back the ivr-agent track" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="200" width="270" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_lk" value="LiveKit room (SFU)&#10;EXTERNAL &#183; wss:// LIVEKIT_URL&#10;room = LIVEKIT_ROOM&#10;room JWT signed locally with&#10;LIVEKIT_API_KEY / _SECRET" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="350" width="270" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_sdk" value="sdk-check&#10;connectors/sdk_check.py&#10;official a2a-sdk + httpx&#10;interop test against the specialist" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="510" width="270" height="110" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_proc" value="Local Python process(es)&#160;&#160;&#8212;&#160;&#160;standard-library HTTP, in-memory state, loopback only" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;align=center;verticalAlign=top;fontSize=13;fontStyle=1;spacing=6;dashPattern=1 1;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="350" y="80" width="900" height="1120" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_bridge" value="Voice bridge&#160;&#8212;&#160;connectors/voice.py&#160;&#160;(voice)&#10;&#8226; energy VAD endpointing (VAD_* env)&#10;&#8226; buffers one utterance, PCM16 mono 16 kHz&#10;&#8226; per-utterance turn UUID; interrupt on new speech&#10;&#8226; AudioSource 24 kHz &#8594; cx-response track" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="370" y="120" width="420" height="150" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_cx" value="CX connector&#160;&#8212;&#160;connectors/cx.py : CXSession&#160;&#160;(cx-text / voice)&#10;&#8226; google-cloud-dialogflow-cx SessionsAsyncClient&#10;&#8226; detect_intent: text OR audio + QueryParameters.payload ivr_turn_id&#10;&#8226; input 16 kHz LINEAR16 / output 24 kHz LINEAR16&#10;&#8226; stateful session lock (no overlapping calls)&#10;&#8226; auth: Google ADC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="810" y="120" width="420" height="150" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_ful" value="Fulfillment service&#160;&#8212;&#160;fulfillment.py&#160;&#160;(serve / demo / chat)&#160;&#160;&#160;&#160;&#160;port 8000&#10;&#10;GET&#160;&#160;/health&#10;POST /webhook/dialogflow-cx&#160;&#160;&#160;&#160;&#160;auth: Bearer CX_WEBHOOK_TOKEN&#10;POST /api/turns/start&#160;&#160;&#183;&#160;&#160;POST /api/turns/cancel&#160;&#160;(reason hangup | interruption)&#10;&#10;&#8212; per-session Turn state; continuation task reuse up to 5 idle min&#10;&#8212; CX-retry dedup by detectIntentResponseId; superseded-turn suppression&#10;&#8212; maps params to {order_id, region}; safe reply templates + FALLBACK text" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="370" y="300" width="860" height="200" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_client" value="A2A client&#160;&#8212;&#160;a2a_client.py&#160;&#160;(runs INSIDE the fulfillment process)&#10;&#8226; discover(): GET Agent Card &#8594; endpoint allowlist + protocol 0.3.0 + order_status skill; cache 300 s&#10;&#8226; run(): message/send (blocking=false) then poll tasks/get to deadline A2A_TIMEOUT_SECONDS&#10;&#8226; validates the single order_status artifact; ignores remote prose&#10;&#8226; cancel_task(): best-effort tasks/cancel&#10;&#8226; Outcome = completed | input-required | timeout | failed | canceled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="370" y="530" width="860" height="150" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_spec" value="Specialist service&#160;&#8212;&#160;specialist.py&#160;&#160;(serve / demo / chat)&#160;&#160;&#160;&#160;&#160;port 8001&#10;&#10;GET&#160;&#160;/health&#10;GET&#160;&#160;/.well-known/agent-card.json&#160;&#160;&#160;(Agent Card: protocol 0.3.0, JSONRPC, order_status skill)&#10;POST /a2a&#160;&#160;&#160;JSON-RPC 2.0: message/send &#183; tasks/get &#183; tasks/cancel&#160;&#160;&#160;auth: Bearer A2A_BEARER_TOKEN (principal 'fulfillment')&#10;&#10;&#8212; in-memory tasks; 16 worker threads; capacity 128; 300 s purge&#10;&#8212; lifecycle: submitted &#8594; working &#8594; completed | failed | input-required ;&#160;&#160;tasks/cancel &#8594; canceled&#10;&#8212; fixtures: ORD-1001 shipped &#183; ORD-1002 delivered &#183; ORD-2001 processing (needs region) &#183; else not_found&#10;&#8212; fault fixtures (DEMO_FAULTS): ORD-SLOW slow &#183; ORD-FAIL failed &#183; ORD-BAD malformed artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="370" y="710" width="860" height="240" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_infra" value="Shared infrastructure&#10;http_support.py: BoundedServer, JsonHandler,&#10;bearer auth (hmac.compare_digest),&#10;request_json (no redirects, 64 KiB cap, JSON only)&#10;config.py: .env loader, Settings, validate_base_url" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="370" y="980" width="420" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_sim" value="Local CX simulator (NO cloud)&#10;local_demo.py: run_demo (demo) &#183; chat&#10;LocalStack: both servers, one process, ephemeral ports&#10;cx_request() builds CX-shaped webhook JSON&#10;writes artifacts/demo-results.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="810" y="980" width="420" height="120" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_env" value="config: .env&#160;&#160;(python -m ivr_poc init generates CX_WEBHOOK_TOKEN + A2A_BEARER_TOKEN)&#10;BIND_HOST 127.0.0.1 &#183; FULFILLMENT_PORT 8000 &#183; SPECIALIST_PORT 8001 &#183; A2A_TIMEOUT_SECONDS 2.0 &#183; A2A_CARD_CACHE_SECONDS 300" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=middle;spacing=8;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="370" y="1120" width="860" height="60" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_dfcx" value="Google Dialogflow CX&#160;&#160;(cx-text / voice only)&#10;gRPC dialogflow.googleapis.com:443&#10;&#8226; speech recognition (STT)&#10;&#8226; intent match + flow/page routing&#10;&#8226; webhook fulfillment call (tag order_status)&#10;&#8226; response synthesis (TTS) &#8594; output_audio&#10;CX_PROJECT_ID &#183; CX_LOCATION &#183; CX_AGENT_ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="120" width="350" height="220" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_adc" value="Google OAuth / ADC&#10;accounts.google.com &#183; oauth2.googleapis.com&#10;gcloud auth application-default login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="370" width="350" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="p1_tunnel" value="HTTPS tunnel&#160;&#160;(cloud mode)&#10;public https:// hostname&#10;forwards to 127.0.0.1:8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="490" width="350" height="90" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1_legend" value="Legend&#10;&#10;blue&#160;&#160;&#160;= local service, always on, Python only&#10;green&#160;= local connector, needs pip extras&#10;orange = external service (cloud mode only)&#10;gray&#160;&#160;&#160;= config / actor / simulator&#10;&#10;solid edge&#160;&#160;= local path&#10;dashed edge = cloud-only path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="620" width="350" height="210" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p1e1" value="mic PCM16 16 kHz / playback (WebRTC)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_caller" target="p1_mic">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e2" value="publish caller mic / play agent reply" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_mic" target="p1_lk">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e3" value="subscribe caller audio track" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_lk" target="p1_bridge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e4" value="POST /api/turns/start | /cancel&#10;Bearer CX_WEBHOOK_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_bridge" target="p1_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e5" value="utterance PCM + turn_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_bridge" target="p1_cx">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e6" value="detect_intent (gRPC :443) &#183; ADC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_cx" target="p1_dfcx">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e7" value="access token" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_cx" target="p1_adc">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e8" value="webhook request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_dfcx" target="p1_tunnel">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e9" value="POST /webhook/dialogflow-cx&#10;tag=order_status, params order_id/region&#10;Bearer CX_WEBHOOK_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_tunnel" target="p1_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e10" value="query {order_id, region}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_ful" target="p1_client">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e11" value="GET agent-card.json&#10;POST /a2a: message/send &#183; tasks/get &#183; tasks/cancel&#10;Bearer A2A_BEARER_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_client" target="p1_spec">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e12" value="response: Task + order_status artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1_spec" target="p1_client">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e13" value="response: Outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1_client" target="p1_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e14" value="HTTP 200 webhook response&#10;fulfillmentResponse + sessionInfo.parameters (a2a_status, ...)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_ful" target="p1_dfcx">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e15" value="DetectIntentResponse + output_audio 24 kHz" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_dfcx" target="p1_cx">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e16" value="Reply(text, audio)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_cx" target="p1_bridge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e17" value="publish cx-response track 24 kHz" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_bridge" target="p1_lk">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e18" value="agent reply audio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p1_lk" target="p1_mic">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e19" value="simulated CX webhook JSON (loopback)&#10;demo / chat &#8212; NO cloud" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;strokeWidth=2;strokeColor=#2d7d2d;" edge="1" parent="1" source="p1_sim" target="p1_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p1e20" value="official a2a-sdk: message/send + get_task" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p1_sdk" target="p1_spec">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-
-  <diagram name="Local-only path (no cloud)" id="local-path">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="920" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-
-        <mxCell id="p2_cmd" value="python -m ivr_poc demo&#160;&#160;&#8594; 12 scenarios, writes artifacts/demo-results.json&#10;python -m ivr_poc chat&#160;&#160;&#8594; regex text parser simulates CX&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#8212;&#160;&#160;Python 3.11+ only, no pip, no Google Cloud, no LiveKit, no API keys" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="30" width="1120" height="56" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p2_stack" value="LocalStack&#160;&#160;&#8212;&#160;&#160;one Python process (local_demo.py), both servers on ephemeral ports" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;align=center;verticalAlign=top;fontSize=13;fontStyle=1;dashed=1;dashPattern=1 1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="110" width="1120" height="690" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p2_sim" value="CX simulator&#10;cx_request(session, order_id, region)&#10;builds a Dialogflow CX webhook JSON body&#10;(chat: regex extracts ORD-#### / east / west)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="70" y="160" width="320" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="p2_out" value="Result&#10;a2a_status: completed / input-required /&#10;timeout / failed / superseded&#10;+ spoken text template&#10;(printed and asserted by tests)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="70" y="380" width="320" height="140" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p2_ful" value="Fulfillment service&#160;&#8212;&#160;fulfillment.py&#160;&#160;(ephemeral port)&#10;POST /webhook/dialogflow-cx&#160;&#160;&#160;Bearer webhook token&#10;&#8226; validate tag order_status, params order_id / region&#10;&#8226; session + continuation (5 min) + retry dedup + supersede&#10;&#8226; render spoken template / FALLBACK&#10;returns fulfillmentResponse + sessionInfo.parameters.a2a_status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="470" y="150" width="660" height="170" as="geometry" />
-        </mxCell>
-        <mxCell id="p2_client" value="A2A client&#160;&#8212;&#160;a2a_client.py&#160;&#160;(inside the fulfillment process)&#10;discover Agent Card (endpoint allowlist, protocol 0.3.0, cache 300 s)&#10;message/send (blocking=false) &#8594; poll tasks/get to the deadline&#10;(~0.6 s in demo, A2A_TIMEOUT_SECONDS otherwise)&#10;validate order_status artifact &#8594; Outcome" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="470" y="370" width="660" height="150" as="geometry" />
-        </mxCell>
-        <mxCell id="p2_spec" value="Specialist service&#160;&#8212;&#160;specialist.py&#160;&#160;(ephemeral port)&#10;GET&#160;&#160;/.well-known/agent-card.json&#10;POST /a2a&#160;&#160;message/send &#183; tasks/get &#183; tasks/cancel&#160;&#160;&#160;Bearer A2A token&#10;in-memory task + background worker thread&#10;fixtures: ORD-1001 shipped &#183; ORD-1002 delivered &#183; ORD-2001 processing+region &#183; else not_found&#10;faults: ORD-SLOW slow &#183; ORD-FAIL failed &#183; ORD-BAD malformed artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="470" y="570" width="660" height="190" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p2_note" value="No Google Cloud, LiveKit, API keys, speech service, DB, or pip installs. Requires Python 3.11+ (system python3 here is 3.9 &#8212; use /opt/homebrew/bin/python3.13)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="830" width="1120" height="50" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p2a1" value="POST webhook JSON (loopback)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p2_sim" target="p2_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p2a2" value="{order_id, region}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p2_ful" target="p2_client">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p2a3" value="GET card &#183; POST /a2a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p2_client" target="p2_spec">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p2a4" value="response: Task + artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2_spec" target="p2_client">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p2a5" value="response: Outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2_client" target="p2_ful">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p2a6" value="webhook response" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p2_ful" target="p2_out">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-
-  <diagram name="A2A task lifecycle" id="task-lifecycle">
-    <mxGraphModel dx="1000" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="720" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-
-        <mxCell id="p3_title" value="Specialist task lifecycle&#160;&#160;(specialist.py)&#160;&#160;&#8212; states validated by a2a_client.py" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="20" width="900" height="30" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p3_start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="90" y="70" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_sub" value="submitted" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="40" y="160" width="140" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_working" value="working" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="40" y="320" width="140" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_input" value="input-required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="330" y="160" width="160" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_completed" value="completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="330" y="430" width="140" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_failed" value="failed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="560" y="320" width="140" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_canceled" value="canceled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="560" y="160" width="140" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="p3_purge" value="purged&#10;300 s idle, terminal or input-required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="780" y="430" width="200" height="70" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p3e0" value="message/send (new task)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_start" target="p3_sub">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e1" value="query complete, worker acquired" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_sub" target="p3_working">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e2" value="missing order_id, or ORD-2001 without region" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_sub" target="p3_input">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e3" value="no worker slot (capacity)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_sub" target="p3_failed">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e4" value="message/send, same taskId + contextId&#10;(resume, up to 8x)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_input" target="p3_working">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e5" value="order_status artifact written" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_working" target="p3_completed">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e6" value="ORD-FAIL / backend error" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_working" target="p3_failed">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e7" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_working" target="p3_canceled">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e8" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="p3_input" target="p3_canceled">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e9" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="p3_sub" target="p3_canceled">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p3_completed" target="p3_purge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p3_failed" target="p3_purge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="p3e12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" edge="1" parent="1" source="p3_canceled" target="p3_purge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <mxCell id="p3_note" value="A2A client (a2a_client.py) maps states to Outcome:&#10;completed &#8594; completed&#160;&#160;&#183;&#160;&#160;input-required &#8594; input-required&#160;&#160;&#183;&#160;&#160;failed / rejected / canceled / auth-required &#8594; failed&#10;local deadline reached &#8594; timeout (then best-effort tasks/cancel)&#160;&#160;&#183;&#160;&#160;transport error &#8594; failed or timeout&#10;invalid artifact / schema / order-id correlation &#8594; failed (local FALLBACK spoken)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;align=left;verticalAlign=top;spacing=8;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="40" y="540" width="700" height="130" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram name="System Architecture" id="sys-arch">
+        <mxGraphModel dx="1106" dy="381" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="1240" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="p1_cli" value="CLI  ·  python -m ivr_poc &lt;command&gt;&#xa;init · demo · chat · serve · doctor   → Python 3.11+ only, no pip, no cloud      |      cx-text · voice · microphone · sdk-check  → need pip extras / cloud accounts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1600" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_caller" value="Caller&#xa;headset mic + speaker&#xa;identity = LIVEKIT_CALLER_ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="90" width="270" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_mic" value="microphone client&#xa;connectors/microphone.py + sounddevice&#xa;command: microphone&#xa;• publishes caller-microphone track (16 kHz)&#xa;• plays back the ivr-agent track" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="200" width="270" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_lk" value="LiveKit room (SFU)&#xa;EXTERNAL · wss:// LIVEKIT_URL&#xa;room = LIVEKIT_ROOM&#xa;room JWT signed locally with&#xa;LIVEKIT_API_KEY / _SECRET" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="350" width="270" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_sdk" value="sdk-check&#xa;connectors/sdk_check.py&#xa;official a2a-sdk + httpx&#xa;interop test against the specialist" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="510" width="270" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_proc" value="Local Python process(es)  —  standard-library HTTP, in-memory state, loopback only" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;align=center;verticalAlign=top;fontSize=13;fontStyle=1;spacing=6;dashPattern=1 1;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="350" y="80" width="900" height="1120" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_bridge" value="Voice bridge — connectors/voice.py  (voice)&#xa;• energy VAD endpointing (VAD_* env)&#xa;• buffers one utterance, PCM16 mono 16 kHz&#xa;• per-utterance turn UUID; interrupt on new speech&#xa;• AudioSource 24 kHz → cx-response track" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="120" width="420" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_cx" value="CX connector — connectors/cx.py : CXSession  (cx-text / voice)&#xa;• google-cloud-dialogflow-cx SessionsAsyncClient&#xa;• detect_intent: text OR audio + QueryParameters.payload ivr_turn_id&#xa;• input 16 kHz LINEAR16 / output 24 kHz LINEAR16&#xa;• stateful session lock (no overlapping calls)&#xa;• auth: Google ADC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="120" width="420" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_ful" value="Fulfillment service — fulfillment.py  (serve / demo / chat)     port 8000&#xa;&#xa;GET  /health&#xa;POST /webhook/dialogflow-cx     auth: Bearer CX_WEBHOOK_TOKEN&#xa;POST /api/turns/start  ·  POST /api/turns/cancel  (reason hangup | interruption)&#xa;&#xa;— per-session Turn state; continuation task reuse up to 5 idle min&#xa;— CX-retry dedup by detectIntentResponseId; superseded-turn suppression&#xa;— maps params to {order_id, region}; safe reply templates + FALLBACK text" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="300" width="860" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_client" value="A2A client — a2a_client.py  (runs INSIDE the fulfillment process)&#xa;• discover(): GET Agent Card → endpoint allowlist + protocol 0.3.0 + order_status skill; cache 300 s&#xa;• run(): message/send (blocking=false) then poll tasks/get to deadline A2A_TIMEOUT_SECONDS&#xa;• validates the single order_status artifact; ignores remote prose&#xa;• cancel_task(): best-effort tasks/cancel&#xa;• Outcome = completed | input-required | timeout | failed | canceled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="530" width="860" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_spec" value="Specialist service — specialist.py  (serve / demo / chat)     port 8001&#xa;&#xa;GET  /health&#xa;GET  /.well-known/agent-card.json   (Agent Card: protocol 0.3.0, JSONRPC, order_status skill)&#xa;POST /a2a   JSON-RPC 2.0: message/send · tasks/get · tasks/cancel   auth: Bearer A2A_BEARER_TOKEN (principal &#39;fulfillment&#39;)&#xa;&#xa;— in-memory tasks; 16 worker threads; capacity 128; 300 s purge&#xa;— lifecycle: submitted → working → completed | failed | input-required ;  tasks/cancel → canceled&#xa;— fixtures: ORD-1001 shipped · ORD-1002 delivered · ORD-2001 processing (needs region) · else not_found&#xa;— fault fixtures (DEMO_FAULTS): ORD-SLOW slow · ORD-FAIL failed · ORD-BAD malformed artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="710" width="860" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_infra" value="Shared infrastructure&#xa;http_support.py: BoundedServer, JsonHandler,&#xa;bearer auth (hmac.compare_digest),&#xa;request_json (no redirects, 64 KiB cap, JSON only)&#xa;config.py: .env loader, Settings, validate_base_url" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="980" width="420" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_sim" value="Local CX simulator (NO cloud)&#xa;local_demo.py: run_demo (demo) · chat&#xa;LocalStack: both servers, one process, ephemeral ports&#xa;cx_request() builds CX-shaped webhook JSON&#xa;writes artifacts/demo-results.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="980" width="420" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_env" value="config: .env  (python -m ivr_poc init generates CX_WEBHOOK_TOKEN + A2A_BEARER_TOKEN)&#xa;BIND_HOST 127.0.0.1 · FULFILLMENT_PORT 8000 · SPECIALIST_PORT 8001 · A2A_TIMEOUT_SECONDS 2.0 · A2A_CARD_CACHE_SECONDS 300" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=middle;spacing=8;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="1120" width="860" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_dfcx" value="Google Dialogflow CX  (cx-text / voice only)&#xa;gRPC dialogflow.googleapis.com:443&#xa;• speech recognition (STT)&#xa;• intent match + flow/page routing&#xa;• webhook fulfillment call (tag order_status)&#xa;• response synthesis (TTS) → output_audio&#xa;CX_PROJECT_ID · CX_LOCATION · CX_AGENT_ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="120" width="350" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_adc" value="Google OAuth / ADC&#xa;accounts.google.com · oauth2.googleapis.com&#xa;gcloud auth application-default login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="370" width="350" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_tunnel" value="HTTPS tunnel  (cloud mode)&#xa;public https:// hostname&#xa;forwards to 127.0.0.1:8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="490" width="350" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_legend" value="Legend&#xa;&#xa;blue   = local service, always on, Python only&#xa;green = local connector, needs pip extras&#xa;orange = external service (cloud mode only)&#xa;gray   = config / actor / simulator&#xa;&#xa;solid edge  = local path&#xa;dashed edge = cloud-only path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="620" width="350" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e1" value="mic PCM16 16 kHz / playback (WebRTC)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_caller" target="p1_mic" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e2" value="publish caller mic / play agent reply" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_mic" target="p1_lk" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e3" value="subscribe caller audio track" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_lk" target="p1_bridge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e4" value="POST /api/turns/start | /cancel&#xa;Bearer CX_WEBHOOK_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_bridge" target="p1_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e5" value="utterance PCM + turn_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_bridge" target="p1_cx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e6" value="detect_intent (gRPC :443) · ADC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_cx" target="p1_dfcx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e7" value="access token" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_cx" target="p1_adc" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e8" value="webhook request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_dfcx" target="p1_tunnel" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e9" value="POST /webhook/dialogflow-cx&#xa;tag=order_status, params order_id/region&#xa;Bearer CX_WEBHOOK_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_tunnel" target="p1_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e10" value="query {order_id, region}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_ful" target="p1_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e11" value="GET agent-card.json&#xa;POST /a2a: message/send · tasks/get · tasks/cancel&#xa;Bearer A2A_BEARER_TOKEN" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_client" target="p1_spec" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e12" value="response: Task + order_status artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="p1_spec" target="p1_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e13" value="response: Outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="p1_client" target="p1_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e14" value="HTTP 200 webhook response&#xa;fulfillmentResponse + sessionInfo.parameters (a2a_status, ...)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_ful" target="p1_dfcx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e15" value="DetectIntentResponse + output_audio 24 kHz" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_dfcx" target="p1_cx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e16" value="Reply(text, audio)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_cx" target="p1_bridge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e17" value="publish cx-response track 24 kHz" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_bridge" target="p1_lk" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e18" value="agent reply audio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p1_lk" target="p1_mic" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e19" value="simulated CX webhook JSON (loopback)&#xa;demo / chat — NO cloud" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;strokeWidth=2;strokeColor=#2d7d2d;" parent="1" source="p1_sim" target="p1_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1e20" value="official a2a-sdk: message/send + get_task" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p1_sdk" target="p1_spec" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Local-only path (no cloud)" id="local-path">
+        <mxGraphModel dx="1106" dy="381" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="920" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="p2_cmd" value="python -m ivr_poc demo  → 12 scenarios, writes artifacts/demo-results.json&#xa;python -m ivr_poc chat  → regex text parser simulates CX       —  Python 3.11+ only, no pip, no Google Cloud, no LiveKit, no API keys" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="30" width="1120" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_stack" value="LocalStack  —  one Python process (local_demo.py), both servers on ephemeral ports" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;align=center;verticalAlign=top;fontSize=13;fontStyle=1;dashed=1;dashPattern=1 1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="110" width="1120" height="690" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_sim" value="CX simulator&#xa;cx_request(session, order_id, region)&#xa;builds a Dialogflow CX webhook JSON body&#xa;(chat: regex extracts ORD-#### / east / west)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="160" width="320" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_out" value="Result&#xa;a2a_status: completed / input-required /&#xa;timeout / failed / superseded&#xa;+ spoken text template&#xa;(printed and asserted by tests)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="380" width="320" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_ful" value="Fulfillment service — fulfillment.py  (ephemeral port)&#xa;POST /webhook/dialogflow-cx   Bearer webhook token&#xa;• validate tag order_status, params order_id / region&#xa;• session + continuation (5 min) + retry dedup + supersede&#xa;• render spoken template / FALLBACK&#xa;returns fulfillmentResponse + sessionInfo.parameters.a2a_status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="150" width="660" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_client" value="A2A client — a2a_client.py  (inside the fulfillment process)&#xa;discover Agent Card (endpoint allowlist, protocol 0.3.0, cache 300 s)&#xa;message/send (blocking=false) → poll tasks/get to the deadline&#xa;(~0.6 s in demo, A2A_TIMEOUT_SECONDS otherwise)&#xa;validate order_status artifact → Outcome" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="370" width="660" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_spec" value="Specialist service — specialist.py  (ephemeral port)&#xa;GET  /.well-known/agent-card.json&#xa;POST /a2a  message/send · tasks/get · tasks/cancel   Bearer A2A token&#xa;in-memory task + background worker thread&#xa;fixtures: ORD-1001 shipped · ORD-1002 delivered · ORD-2001 processing+region · else not_found&#xa;faults: ORD-SLOW slow · ORD-FAIL failed · ORD-BAD malformed artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="570" width="660" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_note" value="No Google Cloud, LiveKit, API keys, speech service, DB, or pip installs. Requires Python 3.11+ (system python3 here is 3.9 — use /opt/homebrew/bin/python3.13)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="830" width="1120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a1" value="POST webhook JSON (loopback)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p2_sim" target="p2_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a2" value="{order_id, region}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p2_ful" target="p2_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a3" value="GET card · POST /a2a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p2_client" target="p2_spec" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a4" value="response: Task + artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="p2_spec" target="p2_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a5" value="response: Outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;endFill=0;fontSize=10;strokeColor=#6c8ebf;dashed=1;dashPattern=6 4;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="p2_client" target="p2_ful" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2a6" value="webhook response" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p2_ful" target="p2_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="A2A task lifecycle" id="task-lifecycle">
+        <mxGraphModel dx="1106" dy="381" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="720" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="p3_title" value="Specialist task lifecycle  (specialist.py)  — states validated by a2a_client.py" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="900" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="70" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_sub" value="submitted" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="160" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_working" value="working" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="320" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_input" value="input-required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="160" width="160" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_completed" value="completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="430" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_failed" value="failed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="320" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_canceled" value="canceled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="160" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_purge" value="purged&#xa;300 s idle, terminal or input-required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="430" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e0" value="message/send (new task)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_start" target="p3_sub" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e1" value="query complete, worker acquired" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_sub" target="p3_working" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e2" value="missing order_id, or ORD-2001 without region" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_sub" target="p3_input" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e3" value="no worker slot (capacity)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_sub" target="p3_failed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e4" value="message/send, same taskId + contextId&#xa;(resume, up to 8x)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_input" target="p3_working" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e5" value="order_status artifact written" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_working" target="p3_completed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e6" value="ORD-FAIL / backend error" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_working" target="p3_failed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e7" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_working" target="p3_canceled" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e8" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;" parent="1" source="p3_input" target="p3_canceled" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e9" value="tasks/cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="p3_sub" target="p3_canceled" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p3_completed" target="p3_purge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p3_failed" target="p3_purge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3e12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;fontSize=10;dashed=1;" parent="1" source="p3_canceled" target="p3_purge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3_note" value="A2A client (a2a_client.py) maps states to Outcome:&#xa;completed → completed  ·  input-required → input-required  ·  failed / rejected / canceled / auth-required → failed&#xa;local deadline reached → timeout (then best-effort tasks/cancel)  ·  transport error → failed or timeout&#xa;invalid artifact / schema / order-id correlation → failed (local FALLBACK spoken)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;align=left;verticalAlign=top;spacing=8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="540" width="700" height="130" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
