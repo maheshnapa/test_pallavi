@@ -1,0 +1,18 @@
+flowchart TD
+    Caller["Caller microphone"] --> Room["LiveKit room"]
+    Room --> Bridge["Python audio bridge"]
+    Bridge --> CX["Dialogflow CX"]
+    CX --> Route{"Specialist intent?"}
+    Route -->|No| Native["CX native response"]
+    Route -->|Yes| Fulfillment["CX fulfillment service"]
+    Fulfillment --> Card["Cached approved Agent Card"]
+    Card --> Specialist["A2A order specialist"]
+    Specialist --> Validate["Validate result or request clarification"]
+    Specialist -->|Failure or deadline| Fallback["Fallback template"]
+    Validate --> Reply["CX fulfillment response"]
+    Fallback --> Reply
+    Reply --> CXAudio["CX synthesized audio"]
+    Native --> CXAudio
+    CXAudio --> Bridge
+    Bridge -->|Reply audio| Room
+    Room -->|Playback| Caller

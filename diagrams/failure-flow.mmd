@@ -1,0 +1,11 @@
+flowchart TD
+    Working["Remote task in progress"] --> Event{"What happens?"}
+    Event -->|Task completes| Current{"Turn still current?"}
+    Current -->|Yes| Speak["Validate and speak result"]
+    Current -->|No| Suppress["Discard stale speech"]
+    Event -->|Deadline| Cancel["Attempt tasks/cancel"]
+    Cancel --> Retry["Return retry-later fallback"]
+    Event -->|New speech or hangup| Invalidate["Invalidate local turn"]
+    Invalidate --> Stop["Clear queued reply audio"]
+    Stop --> Remote["Attempt remote cancellation"]
+    Remote --> Suppress

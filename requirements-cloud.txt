@@ -1,0 +1,7 @@
+# Optional connectors only. The local demo requires no pip installation.
+# Compatibility ranges, not a verified lockfile. Capture pip freeze after your
+# real cloud smoke test. Python 3.11 or 3.12 is recommended for native wheels.
+google-cloud-dialogflow-cx>=2.1,<3
+livekit>=1,<2
+livekit-api>=1,<2
+sounddevice>=0.5,<1

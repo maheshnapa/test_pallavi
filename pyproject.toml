@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a2a-ivr-poc"
+version = "0.1.0"
+description = "Local A2A order-status fulfillment for a LiveKit and Dialogflow CX voice IVR"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+a2a-ivr = "ivr_poc.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["ivr_poc*"]

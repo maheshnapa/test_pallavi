@@ -1,0 +1,28 @@
+LOCAL DEMO | simulated CX webhook input | real HTTP + A2A 0.3 JSON-RPC
+Fictitious orders. No microphone, cloud account, or pip packages required.
+
+Fulfillment: http://127.0.0.1:37943   Specialist: http://127.0.0.1:40245
+
+PASS | Successful order lookup    |   49 ms | completed
+       Order ORD-1001 has shipped and is with the delivery carrier.
+PASS | Missing order number       |    3 ms | input-required
+       What is your order number?
+PASS | Regional clarification     |    3 ms | input-required
+       Is the order for the east or west region?
+PASS | Resume regional task       |   46 ms | completed
+       Order ORD-2001 is being processed.
+PASS | Continuation reuses task ID
+PASS | Unknown order              |   47 ms | completed
+       I couldn't find order ORD-9999. Please check the order number.
+PASS | Remote task failure        |   45 ms | failed
+       I couldn't retrieve the order status right now. Please try again shortly.
+PASS | Malformed remote artifact  |   47 ms | failed
+       I couldn't retrieve the order status right now. Please try again shortly.
+PASS | Slow task deadline         |  604 ms | timeout
+       I couldn't retrieve the order status right now. Please try again shortly.
+PASS | CX retry reuses response
+PASS | New turn after interruption |   48 ms | completed
+       Order ORD-1002 has been delivered.
+PASS | Old turn is not spoken
+
+12/12 checks passed. Evidence: artifacts/demo-results.json

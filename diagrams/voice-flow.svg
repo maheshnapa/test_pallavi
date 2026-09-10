@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1350" viewBox="0 0 1120 1350">
+<title>Voice IVR — component and result flow</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="58" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#18344b">Voice IVR — component and result flow</text>
+<text x="40" y="91" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#526575">Cloud connection supplied in source; local demo starts at the fulfillment service.</text>
+<rect x="400" y="120" width="320" height="80" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="560.0" y="153" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Caller / LiveKit room</text>
+<text x="560.0" y="178" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Microphone in; reply audio out</text>
+<rect x="400" y="250" width="320" height="90" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="560.0" y="283" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Local audio bridge</text>
+<text x="560.0" y="308" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Utterance boundary and turn ID</text>
+<rect x="400" y="390" width="320" height="90" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="560.0" y="423" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Dialogflow CX</text>
+<text x="560.0" y="448" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Speech recognition and intent</text>
+<polyline points="560,200 560,250" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="560,250 556.1058165769135,240.78939005997114 563.8941834230865,240.78939005997114" fill="#627786"/>
+<polyline points="560,340 560,390" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="560,390 556.1058165769135,380.78939005997114 563.8941834230865,380.78939005997114" fill="#627786"/>
+<polyline points="560,480 560,535" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="560,535 556.1058165769135,525.7893900599712 563.8941834230865,525.7893900599712" fill="#627786"/>
+<polygon points="560,535 665,600 560,665 455,600 560,535" fill="#fff6de" stroke="#cfb771" stroke-width="2"/>
+<text x="560" y="592" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="17" font-weight="700" fill="#18344b">Specialist</text>
+<text x="560" y="619" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="17" font-weight="700" fill="#18344b">needed?</text>
+<polyline points="455,600 180,600 180,735" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="180,735 176.1058165769135,725.7893900599712 183.8941834230865,725.7893900599712" fill="#627786"/>
+<text x="270" y="589" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#526575">No</text>
+<rect x="40" y="735" width="280" height="85" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="180.0" y="768" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Native CX response</text>
+<text x="180.0" y="793" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Existing conversation flow</text>
+<polyline points="665,600 930,600 930,700" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="930,700 926.1058165769135,690.7893900599712 933.8941834230865,690.7893900599712" fill="#627786"/>
+<text x="785" y="589" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#526575">Yes</text>
+<rect x="780" y="700" width="300" height="125" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="930.0" y="733" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Fulfillment service</text>
+<text x="930.0" y="758" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Tag: order_status</text>
+<text x="930.0" y="781" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Approved card + cached endpoint</text>
+<text x="930.0" y="804" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Deadline and task lifecycle</text>
+<polyline points="930,825 930,880" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="930,880 926.1058165769135,870.7893900599712 933.8941834230865,870.7893900599712" fill="#627786"/>
+<text x="965" y="858" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#176a9c">A2A</text>
+<rect x="780" y="880" width="300" height="95" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="930.0" y="913" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Order specialist</text>
+<text x="930.0" y="938" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Task state and result artifact</text>
+<text x="930.0" y="961" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Fictitious read-only data</text>
+<polyline points="930,975 930,1065 720,1065" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="720,1065 729.2106099400288,1061.1058165769134 729.2106099400288,1068.8941834230866" fill="#627786"/>
+<rect x="400" y="1020" width="320" height="90" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="560.0" y="1053" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Fulfillment validation</text>
+<text x="560.0" y="1078" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Expected status and order ID</text>
+<rect x="40" y="920" width="280" height="90" rx="10" fill="#fff1e9" stroke="#c3d3df" stroke-width="2"/>
+<text x="180.0" y="953" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Fallback response</text>
+<text x="180.0" y="978" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Controlled retry-later message</text>
+<polyline points="400,1065 180,1065 180,1010" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="180,1010 183.8941834230865,1019.2106099400288 176.1058165769135,1019.2106099400288" fill="#627786"/>
+<text x="205" y="1037" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="13" font-weight="400" fill="#526575">Failure / deadline</text>
+<text x="205" y="1055" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="13" font-weight="400" fill="#526575">Invalid result</text>
+<polyline points="560,1110 560,1180" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="560,1180 556.1058165769135,1170.789390059971 563.8941834230865,1170.789390059971" fill="#627786"/>
+<text x="580" y="1149" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Valid result</text>
+<rect x="400" y="1180" width="320" height="85" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="560.0" y="1213" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">CX synthesis and playback</text>
+<text x="560.0" y="1238" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#526575">Bridge publishes current reply</text>
+<polyline points="320,775 355,775 355,1220 400,1220" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="400,1220 390.78939005997114,1223.8941834230866 390.78939005997114,1216.1058165769134" fill="#627786"/>
+<polyline points="320,965 355,965" fill="none" stroke="#627786" stroke-width="2"/>
+<polyline points="560,1265 560,1300 20,1300 20,160 400,160" fill="none" stroke="#627786" stroke-width="2"/>
+<polygon points="400,160 390.78939005997114,163.8941834230865 390.78939005997114,156.1058165769135" fill="#627786"/>
+<text x="50" y="1283" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="15" font-weight="400" fill="#176a9c">Reply audio through the bridge and LiveKit</text>
+</svg>

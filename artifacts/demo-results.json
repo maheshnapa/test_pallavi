@@ -1,0 +1,84 @@
+{
+  "generated_at_utc": "2026-09-10T16:56:25.957227+00:00",
+  "mode": "local-http",
+  "protocol_target": "A2A 0.3.0 JSON-RPC subset",
+  "cloud_services_exercised": false,
+  "passed": true,
+  "scenarios": [
+    {
+      "scenario": "Successful order lookup",
+      "passed": true,
+      "status": "completed",
+      "elapsed_ms": 79,
+      "spoken_response": "Order ORD-1001 has shipped and is with the delivery carrier."
+    },
+    {
+      "scenario": "Missing order number",
+      "passed": true,
+      "status": "input-required",
+      "elapsed_ms": 11,
+      "spoken_response": "What is your order number?"
+    },
+    {
+      "scenario": "Regional clarification",
+      "passed": true,
+      "status": "input-required",
+      "elapsed_ms": 10,
+      "spoken_response": "Is the order for the east or west region?"
+    },
+    {
+      "scenario": "Resume regional task",
+      "passed": true,
+      "status": "completed",
+      "elapsed_ms": 60,
+      "spoken_response": "Order ORD-2001 is being processed."
+    },
+    {
+      "scenario": "Continuation reuses task ID",
+      "passed": true
+    },
+    {
+      "scenario": "Unknown order",
+      "passed": true,
+      "status": "completed",
+      "elapsed_ms": 65,
+      "spoken_response": "I couldn't find order ORD-9999. Please check the order number."
+    },
+    {
+      "scenario": "Remote task failure",
+      "passed": true,
+      "status": "failed",
+      "elapsed_ms": 62,
+      "spoken_response": "I couldn't retrieve the order status right now. Please try again shortly."
+    },
+    {
+      "scenario": "Malformed remote artifact",
+      "passed": true,
+      "status": "failed",
+      "elapsed_ms": 70,
+      "spoken_response": "I couldn't retrieve the order status right now. Please try again shortly."
+    },
+    {
+      "scenario": "Slow task deadline",
+      "passed": true,
+      "status": "timeout",
+      "elapsed_ms": 621,
+      "spoken_response": "I couldn't retrieve the order status right now. Please try again shortly."
+    },
+    {
+      "scenario": "CX retry reuses response",
+      "passed": true
+    },
+    {
+      "scenario": "New turn after interruption",
+      "passed": true,
+      "status": "completed",
+      "elapsed_ms": 66,
+      "spoken_response": "Order ORD-1002 has been delivered."
+    },
+    {
+      "scenario": "Old turn is not spoken",
+      "passed": true
+    }
+  ]
+}

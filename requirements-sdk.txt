@@ -1,0 +1,4 @@
+# Optional compatibility check. This reference deliberately targets A2A 0.3.0.
+# The SDK 1.x API is different; do not replace this with an unbounded upgrade.
+a2a-sdk>=0.3.10,<0.4
+httpx>=0.28,<1

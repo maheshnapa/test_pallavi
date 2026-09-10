@@ -1,0 +1,34 @@
+test_pcm_energy (test_audio.AudioFormatTests.test_pcm_energy) ... ok
+test_wav_header_is_removed_before_livekit_playback (test_audio.AudioFormatTests.test_wav_header_is_removed_before_livekit_playback) ... ok
+test_wrong_sample_rate_and_odd_pcm_are_rejected (test_audio.AudioFormatTests.test_wrong_sample_rate_and_odd_pcm_are_rejected) ... ok
+test_bad_artifact_is_never_spoken (test_integration.IntegrationTests.test_bad_artifact_is_never_spoken) ... ok
+test_bearer_is_required_for_both_services (test_integration.IntegrationTests.test_bearer_is_required_for_both_services) ... ok
+test_clarification_resumes_same_remote_task (test_integration.IntegrationTests.test_clarification_resumes_same_remote_task) ... ok
+test_concurrent_sessions_do_not_share_results (test_integration.IntegrationTests.test_concurrent_sessions_do_not_share_results) ... ok
+test_cx_retry_reuses_response_and_task (test_integration.IntegrationTests.test_cx_retry_reuses_response_and_task) ... ok
+test_deadline_cancels_slow_read_only_task (test_integration.IntegrationTests.test_deadline_cancels_slow_read_only_task) ... ok
+test_different_order_abandons_parked_clarification (test_integration.IntegrationTests.test_different_order_abandons_parked_clarification) ... ok
+test_hangup_during_task_cancels_and_suppresses (test_integration.IntegrationTests.test_hangup_during_task_cancels_and_suppresses) ... ok
+test_hangup_prevents_late_webhook_from_starting_task (test_integration.IntegrationTests.test_hangup_prevents_late_webhook_from_starting_task) ... ok
+test_invalid_order_never_reaches_specialist (test_integration.IntegrationTests.test_invalid_order_never_reaches_specialist) ... ok
+test_missing_order_can_be_supplied_later (test_integration.IntegrationTests.test_missing_order_can_be_supplied_later) ... ok
+test_new_turn_suppresses_old_speech (test_integration.IntegrationTests.test_new_turn_suppresses_old_speech) ... ok
+test_remote_failure_has_fallback (test_integration.IntegrationTests.test_remote_failure_has_fallback) ... ok
+test_remote_unavailable_has_fallback (test_integration.IntegrationTests.test_remote_unavailable_has_fallback) ... ok
+test_reused_turn_id_with_changed_content_is_rejected (test_integration.IntegrationTests.test_reused_turn_id_with_changed_content_is_rejected) ... ok
+test_success_returns_spoken_status (test_integration.IntegrationTests.test_success_returns_spoken_status) ... ok
+test_unknown_order_is_business_result (test_integration.IntegrationTests.test_unknown_order_is_business_result) ... ok
+test_unrecognized_fulfillment_tag_is_rejected (test_integration.IntegrationTests.test_unrecognized_fulfillment_tag_is_rejected) ... ok
+test_voice_answer_preserves_clarification_but_hangup_cancels_it (test_integration.IntegrationTests.test_voice_answer_preserves_clarification_but_hangup_cancels_it) ... ok
+test_canceled_task_cannot_restart (test_integration.ProtocolBoundaryTests.test_canceled_task_cannot_restart) ... ok
+test_card_does_not_authorize_arbitrary_endpoint (test_integration.ProtocolBoundaryTests.test_card_does_not_authorize_arbitrary_endpoint) ... ok
+test_message_retry_deduplicates_and_conflict_rejects (test_integration.ProtocolBoundaryTests.test_message_retry_deduplicates_and_conflict_rejects) ... ok
+test_oversized_body_is_rejected (test_integration.ProtocolBoundaryTests.test_oversized_body_is_rejected) ... ok
+test_task_is_owned_by_authenticated_principal (test_integration.ProtocolBoundaryTests.test_task_is_owned_by_authenticated_principal) ... ok
+test_unsupported_operations_and_parse_errors (test_integration.ProtocolBoundaryTests.test_unsupported_operations_and_parse_errors) ... ok
+test_wrong_context_is_rejected (test_integration.ProtocolBoundaryTests.test_wrong_context_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 2.546s
+
+OK

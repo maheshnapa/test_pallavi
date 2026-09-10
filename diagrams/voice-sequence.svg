@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1035" viewBox="0 0 1200 1035">
+<title>Voice IVR — successful turn sequence</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="58" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#18344b">Voice IVR — successful turn sequence</text>
+<text x="40" y="91" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#526575">Five participants; CX owns the dialog and fulfillment owns A2A task handling.</text>
+<rect x="42" y="115" width="196" height="58" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="140.0" y="148" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Caller / LiveKit</text>
+<polyline points="140,173 140,942" fill="none" stroke="#bdc9d1" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="267" y="115" width="196" height="58" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="365.0" y="148" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Audio bridge</text>
+<polyline points="365,173 365,942" fill="none" stroke="#bdc9d1" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="492" y="115" width="196" height="58" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="590.0" y="148" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Dialogflow CX</text>
+<polyline points="590,173 590,942" fill="none" stroke="#bdc9d1" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="722" y="115" width="196" height="58" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="820.0" y="148" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">Fulfillment</text>
+<polyline points="820,173 820,942" fill="none" stroke="#bdc9d1" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="962" y="115" width="196" height="58" rx="10" fill="#edf5fa" stroke="#c3d3df" stroke-width="2"/>
+<text x="1060.0" y="148" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#18344b">A2A specialist</text>
+<polyline points="1060,173 1060,942" fill="none" stroke="#bdc9d1" stroke-width="2" stroke-dasharray="6 5"/>
+<polyline points="140,215 365,215" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="365,215 355.78939005997114,218.8941834230865 355.78939005997114,211.1058165769135" fill="#176a9c"/>
+<text x="252.5" y="204" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">PCM utterance</text>
+<polyline points="365,265 820,265" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="820,265 810.7893900599712,268.89418342308653 810.7893900599712,261.10581657691347" fill="#176a9c"/>
+<text x="592.5" y="254" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Register session and turn ID</text>
+<polyline points="365,315 590,315" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="590,315 580.7893900599712,318.89418342308653 580.7893900599712,311.10581657691347" fill="#176a9c"/>
+<text x="477.5" y="304" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">detectIntent audio</text>
+<polyline points="590,365 820,365" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="820,365 810.7893900599712,368.89418342308653 810.7893900599712,361.10581657691347" fill="#176a9c"/>
+<text x="705.0" y="354" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">order_status webhook</text>
+<polyline points="820,415 1060,415" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="1060,415 1050.789390059971,418.89418342308653 1050.789390059971,411.10581657691347" fill="#176a9c"/>
+<text x="940.0" y="404" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Agent Card if uncached</text>
+<polyline points="1060,465 820,465" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="820,465 829.2106099400288,461.10581657691347 829.2106099400288,468.89418342308653" fill="#627786"/>
+<text x="940.0" y="454" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Card and endpoint</text>
+<polyline points="820,515 1060,515" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="1060,515 1050.789390059971,518.8941834230865 1050.789390059971,511.10581657691347" fill="#176a9c"/>
+<text x="940.0" y="504" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">message/send</text>
+<polyline points="1060,565 820,565" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="820,565 829.2106099400288,561.1058165769135 829.2106099400288,568.8941834230865" fill="#627786"/>
+<text x="940.0" y="554" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Task ID; working</text>
+<rect x="725" y="583" width="449" height="132" fill="none" stroke="#bbcbd5"/>
+<text x="735" y="599" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="11" font-weight="700" fill="#526575">POLL UNTIL TERMINAL STATE OR DEADLINE</text>
+<polyline points="820,635 1060,635" fill="none" stroke="#176a9c" stroke-width="2"/>
+<polygon points="1060,635 1050.789390059971,638.8941834230865 1050.789390059971,631.1058165769135" fill="#176a9c"/>
+<text x="940.0" y="624" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">tasks/get</text>
+<polyline points="1060,690 820,690" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="820,690 829.2106099400288,686.1058165769135 829.2106099400288,693.8941834230865" fill="#627786"/>
+<text x="940.0" y="679" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Completed task + artifact</text>
+<text x="820" y="744" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="700" fill="#18344b">Validate result</text>
+<polyline points="820,790 590,790" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="590,790 599.2106099400288,786.1058165769135 599.2106099400288,793.8941834230865" fill="#627786"/>
+<text x="705.0" y="779" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">WebhookResponse</text>
+<polyline points="590,845 365,845" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="365,845 374.21060994002886,841.1058165769135 374.21060994002886,848.8941834230865" fill="#627786"/>
+<text x="477.5" y="834" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Synthesized audio</text>
+<polyline points="365,900 140,900" fill="none" stroke="#627786" stroke-width="2" stroke-dasharray="6 5"/>
+<polygon points="140,900 149.21060994002886,896.1058165769135 149.21060994002886,903.8941834230865" fill="#627786"/>
+<text x="252.5" y="889" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="400" fill="#18344b">Publish current reply</text>
+<text x="40" y="990" text-anchor="start" font-family="DejaVu Sans,Arial,sans-serif" font-size="16" font-weight="400" fill="#526575">Local mode simulates the CX webhook request; cloud audio and official SDK checks need separate verification.</text>
+</svg>
