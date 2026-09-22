@@ -198,6 +198,23 @@ The two Python processes generate one-hour room tokens locally. The API secret r
 
 LiveKit's [room connection documentation](https://docs.livekit.io/reference/python/livekit/rtc/room.html) and [access-token API](https://docs.livekit.io/reference/python/livekit/api/access_token.html) are the connector references. A reachable self-hosted LiveKit server can be substituted by providing its URL and credentials; installation and NAT/TURN configuration of that server are outside this package.
 
+### Optional: verify the LiveKit credentials before wiring up CX
+
+`ivr_poc voice` always requires Dialogflow CX too (`VoiceBridge` constructs a `CXSession`
+unconditionally), so it cannot be used as a standalone LiveKit connectivity test. To confirm
+`LIVEKIT_URL`/`LIVEKIT_API_KEY`/`LIVEKIT_API_SECRET` are valid and the room is reachable before
+doing anything else, use LiveKit's own CLI instead:
+
+```bash
+brew install livekit-cli   # or see https://github.com/livekit/livekit-cli
+lk room join --url "$LIVEKIT_URL" --api-key "$LIVEKIT_API_KEY" \
+  --api-secret "$LIVEKIT_API_SECRET" --identity smoke-test "$LIVEKIT_ROOM"
+```
+
+A clean connect/leave with no auth or network error confirms the credentials and room are usable.
+This does not exercise this project's own code at all — it only isolates whether the LiveKit side
+of the setup works before moving on to CX.
+
 ## 7. Run the voice demonstration
 
 Keep Terminal 1 (`serve`) and Terminal 2 (HTTPS tunnel) running. End `cx-text` before starting this demonstration so the logs are easy to follow.
