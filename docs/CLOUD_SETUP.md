@@ -43,6 +43,36 @@ gcloud auth application-default set-quota-project YOUR_PROJECT_ID
 
 `gcloud auth login` and Application Default Credentials serve different clients. The Python connector uses ADC. Leave `GOOGLE_APPLICATION_CREDENTIALS` blank in `.env` when using user ADC. If your organization supplies a service-account credential file, set that variable to its path instead; do not put the JSON contents into `.env` or the source tree.
 
+### Create the CX agent
+
+This project does not create the agent — it only calls one that already exists (`ivr_poc/connectors/cx.py`). If you don't have a test agent yet, create one first, then continue below. There is no `gcloud` subcommand for this; use the Console (simplest) or the REST API.
+
+**Console (recommended):**
+
+1. Open the [Dialogflow CX Console](https://dialogflow.cloud.google.com/cx/projects) and select your project.
+2. Click **Build your own agent** (or **Create agent**).
+3. Set a display name, a location (`global` is simplest and matches the `.env.example` default `CX_LOCATION=global`; pick a regional location such as `us-central1` only if you need data residency there), default language `en`, and a time zone.
+4. Click **Create**. You land in the agent's Build view.
+5. Open **Agent settings** (gear icon) to find the **Agent ID** — a UUID shown in the settings page and in the browser URL after `/agents/`. That UUID is your `CX_AGENT_ID`.
+
+**REST API (if you want it scriptable):**
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "x-goog-user-project: YOUR_PROJECT_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"displayName":"a2a-ivr-poc","defaultLanguageCode":"en","timeZone":"America/New_York"}' \
+  "https://dialogflow.googleapis.com/v3/projects/YOUR_PROJECT_ID/locations/global/agents"
+```
+
+Use `https://REGION-dialogflow.googleapis.com/v3/projects/YOUR_PROJECT_ID/locations/REGION/agents` instead if you picked a regional location. The response's `name` field is
+`projects/YOUR_PROJECT_ID/locations/REGION/agents/AGENT_UUID` — the trailing UUID is your `CX_AGENT_ID`.
+
+See [Manage agents with the API](https://docs.cloud.google.com/dialogflow/cx/docs/how/agent-create-api) and [Agents](https://docs.cloud.google.com/dialogflow/cx/docs/concept/agent) for the full resource reference.
+
+Once the agent exists, continue with sections 4–5 below to add its webhook and routes — that configuration happens inside the agent you just created and cannot be skipped; an empty agent will not recognize any of this project's intents.
+
 Set the following in `.env`:
 
 ```dotenv
